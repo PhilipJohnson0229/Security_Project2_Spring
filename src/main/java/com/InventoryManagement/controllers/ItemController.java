@@ -54,6 +54,7 @@ public class ItemController {
         return service.findItemByStoreId(id);
     }
     
+    
     @GetMapping("/getStoreItemsName")
     public List<Item> getItemsByStoreName(@RequestParam(name = "name", required = true) String name){
         return service.findItemByStoreName(name);
