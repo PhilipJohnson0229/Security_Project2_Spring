@@ -75,7 +75,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		// 3. click link href=malicious JS   POST boa.com/api/transfer/your-acct/myacct/balance
 		// 4. YOU initiated the request
 		//http.csrf().disable().addFilterBefore(new FilterChainConfig(), UsernamePasswordAuthenticationFilter.class);
-		    http.csrf().disable().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		    http.csrf().disable().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+		    .addFilterBefore(new FilterChainConfig(), UsernamePasswordAuthenticationFilter.class);
 	        
 	        http = http.sessionManagement()
 	                   .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -89,10 +90,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	        http.authorizeRequests()
 	            .antMatchers("/auth/**").permitAll()
 	            .antMatchers("/api").permitAll()
-	            .antMatchers("/item/**").permitAll()
-	            .antMatchers("/store/**").permitAll()
+	            .antMatchers("/items/**").permitAll()
+	            .antMatchers("/stores/**").permitAll()
 	            .antMatchers("/login").permitAll()
-	            .anyRequest().authenticated();
+	            .anyRequest().permitAll();
 	        
 	      
 		// generate a random csrf_token. Unsafe methods MUST contain the CSRF token or-else request is denied

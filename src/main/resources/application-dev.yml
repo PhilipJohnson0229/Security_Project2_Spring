@@ -1,8 +1,5 @@
 # in dev profile
-jwt:
-  header: Authorization
-  secret: my-very-secret-key
-  
+
 server:
   port: 8080
   servlet:
@@ -18,13 +15,13 @@ spring:
     show-sql: true
 
 cookies:
-  domain: coderscampus.com
-  domainRoot: https://assignments.coderscampus.com
+  domain: http://localhost:8080
+  domainRoot: http://localhost:8080
   
 logging:
   level:
     com:
-      chinook: DEBUG
+      InventoryManagement: DEBUG
     org:
       springframework: 
         web: DEBUG

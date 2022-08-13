@@ -68,9 +68,11 @@ public class AuthController {
                     .path("/")
                     .maxAge(Duration.buildByDays(365).getMilliseconds())
                     .build();*/
-            System.out.println(jwtUtil.generateToken(user));
+            //System.out.println(jwtUtil.generateToken(user));
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(user)).header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(user))
+                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                    .header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET","POST","DELETE", "PUT")
                     .body(user);
         } catch (BadCredentialsException ex) {
         	ex.printStackTrace();
@@ -82,13 +84,16 @@ public class AuthController {
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(@CookieValue(name = "jwt") String token,
             @AuthenticationPrincipal User user) {
+    	
         try {
+        	
             Boolean isValidToken = jwtUtil.validateToken(token, user);
             return ResponseEntity.ok(isValidToken);
         } catch (ExpiredJwtException e) {
             return ResponseEntity.ok(false);
         }
     }
+    
     
    
 }

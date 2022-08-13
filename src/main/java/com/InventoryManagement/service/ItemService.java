@@ -54,6 +54,11 @@ public class ItemService {
 		return repo.save(item);
 	}
 	
+	public void delete(int id) 
+	{
+		repo.deleteById(id);
+	}
+	
 	//TODO need to add update and delete methods that preauthenticate
 	//@Transactional(propagation = Propagation.REQUIRED) // use an existing transaction (if none, creates one)
 	//@PreAuthorize("hasAnyRole('ADMIN', 'USER')") // security at the method level
