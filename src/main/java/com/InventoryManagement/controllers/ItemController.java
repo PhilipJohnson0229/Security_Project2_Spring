@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.InventoryManagement.beans.Item;
+import com.InventoryManagement.dto.ItemRequest;
 import com.InventoryManagement.service.ItemService;
 
 //receives requests and passes the params and path vriables to the service
@@ -43,6 +46,12 @@ public class ItemController {
         return service.findAll(page);
     }
     
+    @GetMapping("/getItemsNoPage")
+    @ResponseBody                    //Pagination -> ItemRepo extends PagingAndSortingRepository
+    public Iterable<Item> getItemsNoPage(@RequestParam(defaultValue = "0") int page){
+        return service.findAllNoPage();
+    }
+    
     @GetMapping("/getStoreItemsId")
     public List<Item> getItemsByStoreId(@RequestParam(name = "id", required = true) int id, Authentication principal){
     	//SecurityContext - stores all Authentication info in HttpSession
@@ -60,10 +69,13 @@ public class ItemController {
         return service.findItemByStoreName(name);
     }
     
-    @PostMapping // objectMapper.readValue(req.getInputStream(), Artist.class)
+    // objectMapper.readValue(req.getInputStream(), Artist.class)
+    @RequestMapping(value="/addItem", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional // 
-	public ResponseEntity<Item> save(@Valid @RequestBody Item item) { // 400
-		return new ResponseEntity<>(service.save(item), HttpStatus.CREATED);
+	public ResponseEntity<Void> save( @RequestBody ItemRequest item) { // 400
+    	System.out.println(item);
+    	service.insertItem(item);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping("/many")  

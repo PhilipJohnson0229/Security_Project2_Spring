@@ -38,6 +38,11 @@ public class Category {
 	public Category() {
 		super();
 	}
+	
+	public Category(int id) {
+		super();
+		this.id=id;
+	}
 
 
 	public int getId() {

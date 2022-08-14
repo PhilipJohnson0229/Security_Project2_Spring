@@ -2,6 +2,8 @@ package com.InventoryManagement.data;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +25,6 @@ public interface ItemRepo extends PagingAndSortingRepository<Item, Integer>{
 	
 	@Query("From Item i inner join i.store str where str.id = ?1")
 	public List<Item> findByStoreId(int storeId);
+	
+	
 }

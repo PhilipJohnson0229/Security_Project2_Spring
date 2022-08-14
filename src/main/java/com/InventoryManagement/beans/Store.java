@@ -40,6 +40,11 @@ public class Store {
 	}
 
 
+	public Store(int id) {
+		super();
+		this.id = id;
+	}
+	
 	public Store(int id, String name, String location, Set<Item> items) {
 		super();
 		this.id = id;
