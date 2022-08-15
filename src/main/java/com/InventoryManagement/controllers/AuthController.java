@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +27,7 @@ import com.InventoryManagement.data.UserRepo;
 import com.InventoryManagement.dto.AuthCredentialsRequest;
 import com.InventoryManagement.utils.JwtUtil;
 
+import ch.qos.logback.core.util.Duration;
 import io.jsonwebtoken.ExpiredJwtException;
 
 @RestController
@@ -42,6 +44,8 @@ public class AuthController {
     @Autowired
     private UserRepo repo;
     
+    private String domain = "myDomain.com";
+
     @GetMapping("/search")
     public List<User> getUsers()
     {
@@ -62,12 +66,12 @@ public class AuthController {
             //set this to null so hackers cant view the password in jwt
             user.setPassword(null);
             
-            /*String token = jwtUtil.generateToken(user);
+            String token = jwtUtil.generateToken(user);
             ResponseCookie cookie = ResponseCookie.from("jwt", token)
                     .domain(domain)
                     .path("/")
                     .maxAge(Duration.buildByDays(365).getMilliseconds())
-                    .build();*/
+                    .build();
             //System.out.println(jwtUtil.generateToken(user));
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(user))
@@ -95,5 +99,15 @@ public class AuthController {
     }
     
     
-   
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout () {
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .domain(domain)
+                .path("/")
+                .maxAge(0)
+                .build();
+        System.out.println("Logged Out.");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString()).body("ok");
+    }
 }
